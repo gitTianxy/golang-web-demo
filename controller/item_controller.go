@@ -6,15 +6,19 @@ import (
 	"encoding/json"
 	"log"
 	"golang-web-demo/model"
-	"golang-web-demo/repo"
+	"golang-web-demo/dao"
 	"golang-web-demo/util"
 	"golang-web-demo/base"
 	"io/ioutil"
 )
 
-func GetItems(w http.ResponseWriter, r *http.Request) {
+type ItemController struct {
+	ItemDao *dao.ItemDao
+}
+
+func (control ItemController) GetItems(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
-	items := repo.FindItems()
+	items := control.ItemDao.FindItems()
 	ret := model.RespData{200, "ok", items, time.Now().Unix()}
 	handler := base.HttpResponseHandler{ w}
 	handler.HandleResult(ret)
@@ -28,14 +32,14 @@ func GetItems(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
-func PostItem(w http.ResponseWriter, r *http.Request) {
+func (control ItemController) PostItem(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 	// parse JSON body
 	var item model.Item
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &item)
 
-	repo.CreateItem(item)
+	control.ItemDao.CreateItem(item)
 
 	handler := base.HttpResponseHandler{w}
 	handler.Succ()
@@ -50,14 +54,14 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
-func GetItem(w http.ResponseWriter, r *http.Request) {
+func (control ItemController) GetItem(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 
 	// parse query parameter
 	reqHandler := base.HttpRequestHandler{r}
 	id := reqHandler.GetParamVal("id")
 
-	item := repo.FindItem(util.String2Int(id))
+	item := control.ItemDao.FindItem(util.String2Int(id))
 	handler := base.HttpResponseHandler{w}
 	handler.HandleResult(item)
 
@@ -70,14 +74,14 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
-func PutItem(w http.ResponseWriter, r *http.Request) {
+func (control ItemController) PutItem(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 
 	// parse JSON body
 	var item model.Item
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &item)
-	repo.UpdateItem(item)
+	control.ItemDao.UpdateItem(item)
 	handler := base.HttpResponseHandler{w}
 	handler.Succ()
 
@@ -90,14 +94,14 @@ func PutItem(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
-func DeleteItem(w http.ResponseWriter, r *http.Request) {
+func (control ItemController) DeleteItem(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
 
 	// parse query parameter
 	reqHandler := base.HttpRequestHandler{r}
 	id := reqHandler.GetParamVal("id")
 
-	repo.DeleteItem(util.String2Int(id))
+	control.ItemDao.DeleteItem(util.String2Int(id))
 
 	handler := base.HttpResponseHandler{w}
 	handler.Succ()
