@@ -12,14 +12,15 @@ import (
 func main() {
 	// init `MySQLClient`
 	mysqlClientShared := base.GetMysqlClient()
-	// init `ItemController`
 	itemDao := dao.ItemDao{}
 	itemDao.SetMysqlClient(mysqlClientShared)
 
-	// init web service
+	// init controllers
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", controller.Index).Methods("GET")
-	itemController := controller.ItemController{&itemDao}
+
+	itemController := controller.ItemController{}
+	itemController.SetDao(itemDao)
 	router.HandleFunc("/api/items", itemController.GetItems).Methods("GET")
 	router.HandleFunc("/api/item", itemController.GetItem).Methods("GET")
 	router.HandleFunc("/api/item", itemController.PostItem).Methods("POST")

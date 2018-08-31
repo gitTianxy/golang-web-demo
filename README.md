@@ -36,6 +36,7 @@
 * connector: `database/sql`
 
 ### redis
+* driver: `github.com/go-redis/redis`
 
 ### mongodb
 

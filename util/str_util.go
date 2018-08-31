@@ -19,3 +19,7 @@ func Int2String(in int) string {
 func Int642String(in int64) string {
 	return strconv.FormatInt(in,10)
 }
+
+func String2Bytes(str string) []byte  {
+	return []byte(str)
+}

@@ -13,12 +13,16 @@ import (
 )
 
 type ItemController struct {
-	ItemDao *dao.ItemDao
+	itemDao dao.ItemDao
+}
+
+func (this *ItemController) SetDao(dao dao.ItemDao)  {
+	this.itemDao = dao
 }
 
 func (control ItemController) GetItems(w http.ResponseWriter, r *http.Request) {
 	start := time.Now()
-	items := control.ItemDao.FindItems()
+	items := control.itemDao.FindItems()
 	ret := model.RespData{200, "ok", items, time.Now().Unix()}
 	handler := base.HttpResponseHandler{ w}
 	handler.HandleResult(ret)
@@ -39,7 +43,7 @@ func (control ItemController) PostItem(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &item)
 
-	control.ItemDao.CreateItem(item)
+	control.itemDao.CreateItem(item)
 
 	handler := base.HttpResponseHandler{w}
 	handler.Succ()
@@ -61,7 +65,7 @@ func (control ItemController) GetItem(w http.ResponseWriter, r *http.Request) {
 	reqHandler := base.HttpRequestHandler{r}
 	id := reqHandler.GetParamVal("id")
 
-	item := control.ItemDao.FindItem(util.String2Int(id))
+	item := control.itemDao.FindItem(util.String2Int(id))
 	handler := base.HttpResponseHandler{w}
 	handler.HandleResult(item)
 
@@ -81,7 +85,7 @@ func (control ItemController) PutItem(w http.ResponseWriter, r *http.Request) {
 	var item model.Item
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &item)
-	control.ItemDao.UpdateItem(item)
+	control.itemDao.UpdateItem(item)
 	handler := base.HttpResponseHandler{w}
 	handler.Succ()
 
@@ -101,7 +105,7 @@ func (control ItemController) DeleteItem(w http.ResponseWriter, r *http.Request)
 	reqHandler := base.HttpRequestHandler{r}
 	id := reqHandler.GetParamVal("id")
 
-	control.ItemDao.DeleteItem(util.String2Int(id))
+	control.itemDao.DeleteItem(util.String2Int(id))
 
 	handler := base.HttpResponseHandler{w}
 	handler.Succ()
