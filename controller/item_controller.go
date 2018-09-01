@@ -14,6 +14,7 @@ import (
 	"golang-web-demo/rao"
 	"fmt"
 	"errors"
+	"github.com/julienschmidt/httprouter"
 )
 
 type ItemController struct {
@@ -30,7 +31,7 @@ func (this *ItemController) Init(mysqlClient *base.MySQLClient, redisClient *red
 	this.itemSvc.Rao = &itemRao
 }
 
-func (control ItemController) GetItems(w http.ResponseWriter, r *http.Request) {
+func (control ItemController) GetItems(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	start := time.Now()
 	items, err := control.itemSvc.GetItems()
 	if err != nil {
@@ -43,7 +44,7 @@ func (control ItemController) GetItems(w http.ResponseWriter, r *http.Request) {
 	base.LogRequestFinish(r, "get items", time.Since(start).Seconds())
 }
 
-func (control ItemController) PostItem(w http.ResponseWriter, r *http.Request) {
+func (control ItemController) PostItem(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	start := time.Now()
 	handler := base.HttpResponseHandler{w}
 	// parse JSON body
@@ -72,14 +73,13 @@ func (control ItemController) PostItem(w http.ResponseWriter, r *http.Request) {
 	base.LogRequestFinish(r, "post item", time.Since(start).Seconds())
 }
 
-func (control ItemController) GetItem(w http.ResponseWriter, r *http.Request) {
+func (control ItemController) GetItem(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	start := time.Now()
 	handler := base.HttpResponseHandler{w}
 
 	// parse query parameter
-	reqHandler := base.HttpRequestHandler{r}
-	id, ok := reqHandler.GetReqParam("id")
-	if !ok {
+	id := ps.ByName("id")
+	if len(id) == 0 {
 		msg := fmt.Sprintf("invalid param. id:%v", id)
 		base.LogRequestErr(r, errors.New(msg))
 		handler.Fail(msg)
@@ -95,7 +95,8 @@ func (control ItemController) GetItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if control.itemSvc.IsNull(item) {
-		handler.NotFound("")
+		msg := fmt.Sprintf("item not found. id:%v", id)
+		handler.NotFound(msg)
 		return
 	}
 
@@ -103,7 +104,7 @@ func (control ItemController) GetItem(w http.ResponseWriter, r *http.Request) {
 	base.LogRequestFinish(r, "get item", time.Since(start).Seconds())
 }
 
-func (control ItemController) PutItem(w http.ResponseWriter, r *http.Request) {
+func (control ItemController) PutItem(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	start := time.Now()
 	handler := base.HttpResponseHandler{w}
 
@@ -128,14 +129,13 @@ func (control ItemController) PutItem(w http.ResponseWriter, r *http.Request) {
 	base.LogRequestFinish(r, "update item", time.Since(start).Seconds())
 }
 
-func (control ItemController) DeleteItem(w http.ResponseWriter, r *http.Request) {
+func (control ItemController) DeleteItem(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	start := time.Now()
 	respHandler := base.HttpResponseHandler{w}
 
 	// parse query parameter
-	reqHandler := base.HttpRequestHandler{r}
-	id, ok := reqHandler.GetReqParam("id")
-	if !ok {
+	id := ps.ByName("id")
+	if len(id) == 0 {
 		msg := fmt.Sprintf("invalid param. id=%v", id)
 		base.LogRequestErr(r, errors.New(msg))
 		respHandler.Fail(msg)

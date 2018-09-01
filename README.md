@@ -14,10 +14,12 @@
 ### pkgs
 * github.com/go-redis/redis
 * github.com/go-sql-driver/mysql
+* github.com/julienschmidt/httprouter
 
 ## RESTful API
 ### frameworks
 * github.com/gorilla/mux
+* github.com/julienschmidt/httprouter
 
 ### issues
 * get request param

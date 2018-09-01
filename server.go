@@ -4,8 +4,8 @@ package main
 import (
 	"net/http"
 	"golang-web-demo/controller"
-	"github.com/gorilla/mux"
 	"golang-web-demo/base"
+	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
@@ -15,16 +15,16 @@ func main() {
 	redisClientShared := base.GetRedisClient()
 
 	// init controllers
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", controller.Index).Methods("GET")
+	router := httprouter.New()
+	router.GET("/", controller.Index)
 
 	itemController := controller.ItemController{}
 	itemController.Init(mysqlClientShared, redisClientShared)
-	router.HandleFunc("/api/items", itemController.GetItems).Methods("GET")
-	router.HandleFunc("/api/item", itemController.GetItem).Methods("GET")
-	router.HandleFunc("/api/item", itemController.PostItem).Methods("POST")
-	router.HandleFunc("/api/item", itemController.PutItem).Methods("PUT")
-	router.HandleFunc("/api/item", itemController.DeleteItem).Methods("DELETE")
+	router.GET("/api/items", itemController.GetItems)
+	router.GET("/api/item/:id", itemController.GetItem)
+	router.POST("/api/item", itemController.PostItem)
+	router.PUT("/api/item/:id", itemController.PutItem)
+	router.DELETE("/api/item/:id", itemController.DeleteItem)
 
 	// listen port
 	http.ListenAndServe("localhost:8085", router)
