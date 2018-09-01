@@ -6,11 +6,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func GetMysqlClient() MySQLClient {
+func GetMysqlClient() *MySQLClient {
 	client := MySQLClient{}
 	err := client.init(GetDBConfig())
 	CheckErr(err)
-	return client
+	return &client
 }
 
 type MySQLClient struct {

@@ -1,4 +1,5 @@
 # outline
+* requirements
 * RESTful API
 * static view(html/jss/css)
 * logging
@@ -9,6 +10,11 @@
 * version notes
 
 ---
+## requirements
+### pkgs
+* github.com/go-redis/redis
+* github.com/go-sql-driver/mysql
+
 ## RESTful API
 ### frameworks
 * github.com/gorilla/mux

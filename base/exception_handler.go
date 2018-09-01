@@ -5,3 +5,7 @@ func CheckErr(err error) {
 		panic(err)
 	}
 }
+
+func CheckErr2Bool(err error) bool  {
+	return err == nil
+}

@@ -6,21 +6,20 @@ import (
 	"golang-web-demo/controller"
 	"github.com/gorilla/mux"
 	"golang-web-demo/base"
-	"golang-web-demo/dao"
 )
 
 func main() {
 	// init `MySQLClient`
 	mysqlClientShared := base.GetMysqlClient()
-	itemDao := dao.ItemDao{}
-	itemDao.SetMysqlClient(mysqlClientShared)
+	// init `RedisClient`
+	redisClientShared := base.GetRedisClient()
 
 	// init controllers
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", controller.Index).Methods("GET")
 
 	itemController := controller.ItemController{}
-	itemController.SetDao(itemDao)
+	itemController.Init(mysqlClientShared, redisClientShared)
 	router.HandleFunc("/api/items", itemController.GetItems).Methods("GET")
 	router.HandleFunc("/api/item", itemController.GetItem).Methods("GET")
 	router.HandleFunc("/api/item", itemController.PostItem).Methods("POST")

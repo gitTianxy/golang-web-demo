@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `golang_web_demo`.`user` (
  COMMENT = '用户表'
 
 /* item */
-CREATE TABLE `item` (
+CREATE TABLE `golang_web_demo`.`item` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `name` varchar(45) NOT NULL COMMENT '名称',
   PRIMARY KEY (`id`),
