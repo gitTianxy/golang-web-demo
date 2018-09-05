@@ -1,9 +1,9 @@
 package dao
 
 import (
-	"golang-web-demo/model"
+	"model"
 	_ "github.com/go-sql-driver/mysql"
-	"golang-web-demo/base"
+	"base"
 )
 
 type ItemDao struct {

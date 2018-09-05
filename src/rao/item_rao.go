@@ -3,10 +3,10 @@ package rao
 import (
 	"github.com/go-redis/redis"
 	"time"
-	"golang-web-demo/model"
+	"model"
 	"encoding/json"
 	"strings"
-	"golang-web-demo/util"
+	"util"
 )
 
 const EXPIRE_SECS = 300

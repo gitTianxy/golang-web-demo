@@ -1,9 +1,9 @@
 package service
 
 import (
-	"golang-web-demo/dao"
-	"golang-web-demo/rao"
-	"golang-web-demo/model"
+	"dao"
+	"rao"
+	"model"
 	"log"
 )
 

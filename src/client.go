@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"fmt"
-	"golang-web-demo/model"
+	"model"
 	"encoding/json"
 )
 
