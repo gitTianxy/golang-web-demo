@@ -1,20 +1,31 @@
 package main
 
 import (
+	"github.com/go-redis/redis"
 	"github.com/julienschmidt/httprouter"
 	"golang-web-demo/base"
 	"golang-web-demo/controller"
 	"net/http"
 )
 
-func main() {
-	// init `MySQLClient`
-	mysqlClientShared := base.GetMysqlClient()
-	// init `RedisClient`
-	redisClientShared := base.GetRedisClient()
+var mysqlClientShared *base.MySQLClient
+var redisClientShared *redis.Client
+var router *httprouter.Router
 
-	// init controllers
-	router := httprouter.New()
+/**
+ * init resources
+ */
+func init()  {
+	// init `MySQLClient`
+	mysqlClientShared = base.GetMysqlClient()
+	// init `RedisClient`
+	redisClientShared = base.GetRedisClient()
+	// init httprouter
+	router = httprouter.New()
+}
+
+func main() {
+	// define controllers
 	router.GET("/", controller.Index)
 
 	itemController := controller.ItemController{}

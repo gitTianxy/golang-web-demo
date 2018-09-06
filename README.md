@@ -31,6 +31,7 @@
 * templates
 
 ## logging
+* native log
 
 ## config
 ### properties
